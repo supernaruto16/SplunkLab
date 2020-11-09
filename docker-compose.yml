@@ -1,0 +1,37 @@
+version: "3.8"
+
+networks:
+  splunknet:
+    driver: bridge
+    attachable: true
+
+services:
+  splunk:
+    networks:
+      splunknet:
+        aliases:
+          - splunk
+    image: splunk/splunk:latest
+    hostname: splunk
+    container_name: splunk
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_PASSWORD=splunk123@
+    ports:
+      - 8000:8000
+      - 9997:9997
+
+  dvwa:
+    networks:
+      splunknet:
+        aliases:
+          - dvwa
+    hostname: dvwa
+    container_name: dvwa
+    ports:
+      - 8180:80
+    build:
+      context: ./
+      dockerfile: dvwa/Dockerfile
+
+
